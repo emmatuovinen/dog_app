@@ -1,25 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { toEditorSettings } from 'typescript';
+// import './App.css';
+import { DogTask } from './DogTask';
+import { NoteForm } from './NoteForm';
+import { TaskList } from './TaskList';
+
+const dailyTasks: Task[] = [
+  {
+      text: 'Morning walk',
+      complete: false,
+  },
+  {
+      text: 'Give dog breakfast',
+      complete: true,
+  },
+];
 
 function App() {
+  const [tasks, setTasks] = useState(dailyTasks);
+  const [notes, setNotes] = useState('');
+  
+  // this is the toggleTask function to mark a task complete
+  const toggleTask: ToggleTask = (selectedTask: Task) => {
+    const newTasks = tasks.map(task => {
+      if (task === selectedTask) {
+      return {
+        ...task, 
+        complete: !task.complete
+      }
+    }
+      return task;
+    })
+    setTasks(newTasks)
+  }
+
+  //this is the AddNote function 
+  const addNote: AddNote = (text: string) => {
+    const newNote = {text, complete: false};
+    setTasks([...tasks, newNote])
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <TaskList tasks={tasks} toggleTask={toggleTask}/>
+    <NoteForm />
+    </>
   );
 }
 
