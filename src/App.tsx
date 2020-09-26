@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { toEditorSettings } from 'typescript';
+import React, { useEffect, useState } from 'react';
 // import './App.css';
-import { DogTask } from './DogTask';
 import { NoteForm } from './NoteForm';
+import { NotesList } from './NotesList';
 import { TaskList } from './TaskList';
+import Axios from 'axios';
+const api = 'http://localhost:8000/';
 
 const dailyTasks: Task[] = [
   {
@@ -16,9 +17,26 @@ const dailyTasks: Task[] = [
   },
 ];
 
+// export type DogTaskList = Task[]
+
+
+const demoNote: Note[] = [
+  {
+    info: 'This is a test note'
+  }
+]
+
 function App() {
+  
   const [tasks, setTasks] = useState(dailyTasks);
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useState(demoNote);
+  
+  // useEffect(() => {
+  //   Axios.get<DogTaskList>(api + './dataPeek').then(response => {
+  //     console.log('vastaus apista', response.data)
+  //     setTasks(response.data)
+  // })
+  // })
   
   // this is the toggleTask function to mark a task complete
   const toggleTask: ToggleTask = (selectedTask: Task) => {
@@ -35,15 +53,16 @@ function App() {
   }
 
   //this is the AddNote function 
-  const addNote: AddNote = (text: string) => {
-    const newNote = {text, complete: false};
-    setTasks([...tasks, newNote])
+  const addNote: AddNote = (info: string) => {
+    const newNote = {info};
+    setNotes([...notes, newNote])
   }
 
   return (
     <>
     <TaskList tasks={tasks} toggleTask={toggleTask}/>
-    <NoteForm />
+    <NoteForm addNote={addNote}/>
+    <NotesList notes={notes}/>
     </>
   );
 }
