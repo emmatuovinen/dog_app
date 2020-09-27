@@ -7,12 +7,18 @@ interface Props {
 export const NoteForm: React.FC<Props> = ({addNote}) => {
     const [info, setInfo] = useState('')
 
+    const onChange = (e:any) => {
+        localStorage.setItem('storedNotes', e.target.value)
+
+        setInfo(e.target.value)
+    }
+
     return (
         <form>
             <input 
             type='text'
             value={info}
-            onChange={e => {setInfo(e.target.value)}}
+            onChange={onChange}
             />
             <button 
             type='submit'

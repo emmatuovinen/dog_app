@@ -3,22 +3,20 @@ import React, { useEffect, useState } from 'react';
 import { NoteForm } from './NoteForm';
 import { NotesList } from './NotesList';
 import { TaskList } from './TaskList';
-import Axios from 'axios';
-const api = 'http://localhost:8000/';
+import {GetBasicTasks} from './dogApi';
 
-const dailyTasks: Task[] = [
-  {
-      text: 'Morning walk',
-      complete: false,
-  },
-  {
-      text: 'Give dog breakfast',
-      complete: true,
-  },
-];
+// let dailyTasks: Task[] = [
+//   {
+//       text: 'Morning walk',
+//       complete: false,
+//   },
+//   {
+//       text: 'Give dog breakfast',
+//       complete: true,
+//   },
+// ];
 
-// export type DogTaskList = Task[]
-
+let dailyTasks: Task[] = []
 
 const demoNote: Note[] = [
   {
@@ -28,17 +26,24 @@ const demoNote: Note[] = [
 
 function App() {
   
+  const [isLoading, setLoading] = useState(true);
   const [tasks, setTasks] = useState(dailyTasks);
   const [notes, setNotes] = useState(demoNote);
+
+  useEffect(() => {
+    GetBasicTasks().then(data => {
+    dailyTasks = data
+    setLoading(false)
+    setTasks(dailyTasks)
+    })
+  }, [])
+
+
+if(isLoading) {
+  return <div> Loading </div>
+}
   
-  // useEffect(() => {
-  //   Axios.get<DogTaskList>(api + './dataPeek').then(response => {
-  //     console.log('vastaus apista', response.data)
-  //     setTasks(response.data)
-  // })
-  // })
-  
-  // this is the toggleTask function to mark a task complete
+ 
   const toggleTask: ToggleTask = (selectedTask: Task) => {
     const newTasks = tasks.map(task => {
       if (task === selectedTask) {
