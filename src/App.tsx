@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { NoteForm } from './NoteForm';
 import { NotesList } from './NotesList';
 import { TaskList } from './TaskList';
-import {GetBasicTasks} from './dogApi';
+import {GetBasicTasks, GetNotesFromApi} from './dogApi';
 
 // let dailyTasks: Task[] = [
 //   {
@@ -18,25 +18,40 @@ import {GetBasicTasks} from './dogApi';
 
 let dailyTasks: Task[] = []
 
-const demoNote: Note[] = [
-  {
-    info: 'This is a test note'
-  }
-]
+let dailyNotes: Note[] = []
+
+// const demoNote: Note[] = [
+//   {
+//     info: 'This is a test note'
+//   }
+// ]
 
 function App() {
   
   const [isLoading, setLoading] = useState(true);
   const [tasks, setTasks] = useState(dailyTasks);
-  const [notes, setNotes] = useState(demoNote);
+  const [notes, setNotes] = useState(dailyNotes);
 
   useEffect(() => {
     GetBasicTasks().then(data => {
     dailyTasks = data
-    setLoading(false)
     setTasks(dailyTasks)
+  })
+  GetNotesFromApi().then(noteData => {
+    dailyNotes = noteData
+    console.log('dn', dailyNotes)
+    setNotes(dailyNotes)
     })
+  setLoading(false)
   }, [])
+
+  // useEffect(() => {
+  //   GetNotesFromApi().then(noteData => {
+  //   dailyNotes = noteData
+  //   console.log('dn', dailyNotes)
+  //   setNotes(dailyNotes)
+  //   })
+  // }, [])
 
 
 if(isLoading) {

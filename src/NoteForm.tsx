@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { SendNote } from './dogApi';
+
 
 interface Props {
     addNote: AddNote;
@@ -8,8 +10,6 @@ export const NoteForm: React.FC<Props> = ({addNote}) => {
     const [info, setInfo] = useState('')
 
     const onChange = (e:any) => {
-        localStorage.setItem('storedNotes', e.target.value)
-
         setInfo(e.target.value)
     }
 
@@ -23,8 +23,10 @@ export const NoteForm: React.FC<Props> = ({addNote}) => {
             <button 
             type='submit'
             onClick={e => {
+                console.log('info', info)
                 e.preventDefault();
                 addNote(info);
+                SendNote(info)
                 setInfo('');
             }}
             >
